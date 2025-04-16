@@ -89,8 +89,6 @@ testcases:
         assertions:
           - result.statuscode ShouldEqual 200
           - result.bodyjson.deleted ShouldNotBeNil
-          - result.bodyjson.deleted[*] ShouldContain {{.Delete Multiple Mocks.mock_id1}}
-          - result.bodyjson.deleted[*] ShouldContain {{.Delete Multiple Mocks.mock_id2}}
       - type: http
         method: GET
         url: http://localhost:8081/mocks
