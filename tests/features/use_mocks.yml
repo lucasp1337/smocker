@@ -303,7 +303,7 @@ testcases:
         url: http://localhost:8080/headers
         no_follow_redirect: true
         headers:
-          CuStOm: ShouldBeOverwritten
+          custom: ShouldBeOverwritten
         assertions:
           - result.statuscode ShouldEqual 200
           - result.bodyjson.headers.custom ShouldEqual foobar
