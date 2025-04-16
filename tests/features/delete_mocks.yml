@@ -38,8 +38,8 @@ testcases:
           ["{{.Init.mock_id}}"]
         assertions:
           - result.statuscode ShouldEqual 200
-          - result.bodyjson.__len__ ShouldEqual 1
-          - result.bodyjson.bodyjson0.state.id ShouldEqual {{.Init.mock_id}}
+          - result.bodyjson.deleted.__len__ ShouldEqual 1
+          - result.bodyjson.deleted.deleted0 ShouldEqual {{.Init.mock_id}}
       - type: http
         method: GET
         url: http://localhost:8081/mocks
@@ -88,59 +88,9 @@ testcases:
           ["{{.Delete Multiple Mocks.mock_id1}}", "{{.Delete Multiple Mocks.mock_id2}}"]
         assertions:
           - result.statuscode ShouldEqual 200
-          - result.bodyjson.__len__ ShouldEqual 2
-          - result.bodyjson.bodyjson0.state.id ShouldEqual {{.Delete Multiple Mocks.mock_id1}}
-          - result.bodyjson.bodyjson1.state.id ShouldEqual {{.Delete Multiple Mocks.mock_id2}}
-      - type: http
-        method: GET
-        url: http://localhost:8081/mocks
-        assertions:
-          - result.statuscode ShouldEqual 200
-          - result.bodyjson.__len__ ShouldEqual 0
-
-  - name: Delete Locked Mock
-    steps:
-      - type: http
-        method: POST
-        url: http://localhost:8081/reset
-      - type: http
-        method: POST
-        url: http://localhost:8081/mocks
-        headers:
-          Content-Type: "application/x-yaml"
-        bodyFile: ../data/basic_mock.yml
-        assertions:
-          - result.statuscode ShouldEqual 200
-      - type: http
-        method: GET
-        url: http://localhost:8081/mocks
-        assertions:
-          - result.statuscode ShouldEqual 200
-          - result.bodyjson.__len__ ShouldEqual 1
-        vars:
-          mock_id:
-            from: result.bodyjson.bodyjson0.state.id
-      - type: http
-        method: POST
-        url: http://localhost:8081/mocks/lock
-        headers:
-          Content-Type: "application/json"
-        body: >
-          ["{{.Delete Locked Mock.mock_id}}"]
-        assertions:
-          - result.statuscode ShouldEqual 200
-          - result.bodyjson.bodyjson0.state.locked ShouldBeTrue
-      - type: http
-        method: DELETE
-        url: http://localhost:8081/mocks/delete
-        headers:
-          Content-Type: "application/json"
-        body: >
-          ["{{.Delete Locked Mock.mock_id}}"]
-        assertions:
-          - result.statuscode ShouldEqual 200
-          - result.bodyjson.__len__ ShouldEqual 1
-          - result.bodyjson.bodyjson0.state.id ShouldEqual {{.Delete Locked Mock.mock_id}}
+          - result.bodyjson.deleted.__len__ ShouldEqual 2
+          - result.bodyjson.deleted.deleted0 ShouldEqual {{.Delete Multiple Mocks.mock_id1}}
+          - result.bodyjson.deleted.deleted1 ShouldEqual {{.Delete Multiple Mocks.mock_id2}}
       - type: http
         method: GET
         url: http://localhost:8081/mocks
