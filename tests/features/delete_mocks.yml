@@ -48,52 +48,52 @@ testcases:
           - result.bodyjson.__len__ ShouldEqual 0
 
   - name: Delete Multiple Mocks
-    steps:
-      - type: http
-        method: POST
-        url: http://localhost:8081/reset
-      - type: http
-        method: POST
-        url: http://localhost:8081/mocks
-        headers:
-          Content-Type: "application/x-yaml"
-        bodyFile: ../data/basic_mock.yml
-        assertions:
-          - result.statuscode ShouldEqual 200
-      - type: http
-        method: POST
-        url: http://localhost:8081/mocks
-        headers:
-          Content-Type: "application/x-yaml"
-        bodyFile: ../data/basic_mock.yml
-        assertions:
-          - result.statuscode ShouldEqual 200
-      - type: http
-        method: GET
-        url: http://localhost:8081/mocks
-        assertions:
-          - result.statuscode ShouldEqual 200
-          - result.bodyjson.__len__ ShouldEqual 2
-        vars:
-          mock_id1:
-            from: result.bodyjson.bodyjson0.state.id
-          mock_id2:
-            from: result.bodyjson.bodyjson1.state.id
-      - type: http
-        method: DELETE
-        url: http://localhost:8081/mocks/delete
-        headers:
-          Content-Type: "application/json"
-        body: >
-          ["{{.Delete Multiple Mocks.mock_id1}}", "{{.Delete Multiple Mocks.mock_id2}}"]
-        assertions:
-          - result.statuscode ShouldEqual 200
-          - result.bodyjson.deleted ShouldNotBeNil
-          - result.bodyjson.deleted ShouldContain {{.Delete Multiple Mocks.mock_id1}}
-          - result.bodyjson.deleted ShouldContain {{.Delete Multiple Mocks.mock_id2}}
-      - type: http
-        method: GET
-        url: http://localhost:8081/mocks
-        assertions:
-          - result.statuscode ShouldEqual 200
-          - result.bodyjson.__len__ ShouldEqual 0
+      steps:
+          - type: http
+            method: POST
+            url: http://localhost:8081/reset
+            - type: http
+              method: POST
+              url: http://localhost:8081/mocks
+              headers:
+                Content-Type: "application/x-yaml"
+              bodyFile: ../data/basic_mock.yml
+              assertions:
+                - result.statuscode ShouldEqual 200
+            - type: http
+              method: POST
+              url: http://localhost:8081/mocks
+              headers:
+                Content-Type: "application/x-yaml"
+              bodyFile: ../data/basic_mock.yml
+              assertions:
+                - result.statuscode ShouldEqual 200
+            - type: http
+              method: GET
+              url: http://localhost:8081/mocks
+              assertions:
+                - result.statuscode ShouldEqual 200
+                - result.bodyjson.__len__ ShouldEqual 2
+              vars:
+                mock_id1:
+                  from: result.bodyjson.bodyjson0.state.id
+                mock_id2:
+                  from: result.bodyjson.bodyjson1.state.id
+            - type: http
+              method: DELETE
+              url: http://localhost:8081/mocks/delete
+              headers:
+                Content-Type: "application/json"
+              body: >
+                ["{{.Delete Multiple Mocks.mock_id1}}", "{{.Delete Multiple Mocks.mock_id2}}"]
+              assertions:
+                - result.statuscode ShouldEqual 200
+                - result.bodyjson.deleted ShouldNotBeNil
+                - result.bodyjson ShouldContainValue {{.Delete Multiple Mocks.mock_id1}}
+                - result.bodyjson ShouldContainValue {{.Delete Multiple Mocks.mock_id2}}
+            - type: http
+              method: GET
+              url: http://localhost:8081/mocks
+              assertions:
+                - result.statuscode ShouldEqual 200
+                - result.bodyjson.__len__ ShouldEqual 0
