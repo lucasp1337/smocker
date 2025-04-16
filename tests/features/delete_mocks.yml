@@ -94,4 +94,4 @@ testcases:
         url: http://localhost:8081/mocks
         assertions:
           - result.statuscode ShouldEqual 200
-          - result.bodyjson.mocks.__len__ ShouldEqual 0
+          - result.bodyjson.__len__ ShouldEqual 0
