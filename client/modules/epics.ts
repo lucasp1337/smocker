@@ -6,7 +6,7 @@ import { isActionOf } from "typesafe-actions";
 import { trimedPath } from "../modules/utils";
 import { Actions, actions } from "./actions";
 import {
-  decode,
+  decode, DeletedMocksResponseCodec,
   GraphHistoryCodec,
   HistoryCodec,
   MocksCodec,
@@ -26,6 +26,7 @@ const {
   addMocks,
   lockMocks,
   unlockMocks,
+  deleteMocks,
   reset,
 } = actions;
 
@@ -89,6 +90,31 @@ const updateSessionEpic: Epic<Actions> = (action$) =>
           catchError((error) => of(updateSession.failure(extractError(error))))
         )
     )
+  );
+
+const deleteMocksEpic: Epic<Actions> = (action$) =>
+  action$.pipe(
+    filter(isActionOf(deleteMocks.request)),
+    exhaustMap((action) => {
+      return ajax({
+        url: `${trimedPath}/mocks/delete`,
+        method: 'DELETE',
+        headers: {
+          "Content-Type": ContentTypeJSON,
+        },
+        body: action.payload
+      })
+        .pipe(
+          mergeMap(({ response }) => {
+            return decode(DeletedMocksResponseCodec)(response).pipe(
+              map((resp) => deleteMocks.success(resp))
+            );
+          }),
+          catchError((error) => {
+            return of(lockMocks.failure(extractError(error)));
+          })
+        );
+    })
   );
 
 const uploadSessionsEpic: Epic<Actions> = (action$) =>
@@ -236,6 +262,7 @@ export default combineEpics(
   fetchMocksEpic,
   addMocksEpic,
   lockMocksEpic,
+  deleteMocksEpic,
   unlockMocksEpic,
   resetEpic
 );

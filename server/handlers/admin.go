@@ -163,6 +163,16 @@ func (a *Admin) VerifySession(c echo.Context) error {
 	return respondAccordingAccept(c, response)
 }
 
+func (a *Admin) DeleteMocks(c echo.Context) error {
+	var ids []string
+	if err := bindAccordingAccept(c, &ids); err != nil {
+		return err
+	}
+
+	mocks := a.mocksServices.DeleteMocks(ids)
+	return c.JSON(http.StatusOK, mocks)
+}
+
 func (a *Admin) GetHistory(c echo.Context) error {
 	sessionID := c.QueryParam("session")
 	if sessionID == "" {

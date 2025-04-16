@@ -32,6 +32,11 @@ type Mock struct {
 	Proxy           *MockProxy           `json:"proxy,omitempty" yaml:"proxy,omitempty"`
 }
 
+type DeletedMockResponse struct {
+	Mocks   Mocks    `json:"mocks" yaml:"mocks"`
+	Deleted []string `json:"deleted" yaml:"deleted"`
+}
+
 func (m *Mock) Validate() error {
 	if m.Response == nil && m.DynamicResponse == nil && m.Proxy == nil {
 		return errors.New("The route must define at least a response, a dynamic response or a proxy")

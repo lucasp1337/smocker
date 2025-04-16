@@ -4,6 +4,7 @@ import {
   PlayCircleFilled,
   PlusOutlined,
   UnlockFilled,
+  DeleteOutlined,
 } from "@ant-design/icons";
 import {
   Alert,
@@ -205,15 +206,18 @@ const MockComponent = ({
   loading,
   lockMock,
   unlockMock,
+  deleteMock,
 }: {
   mock: Mock;
   canPoll: boolean;
   loading: boolean;
   lockMock: (mockID: string) => unknown;
   unlockMock: (mockID: string) => unknown;
+  deleteMock: (mockID: string) => unknown;
 }) => {
   const onLockMock = () => lockMock(mock.state.id);
   const onUnlockMock = () => unlockMock(mock.state.id);
+  const onDeleteMock = () => deleteMock(mock.state.id);
   return (
     <div className="mock">
       <div className="meta">
@@ -238,6 +242,15 @@ const MockComponent = ({
               onClick={onLockMock}
             />
           )}
+          <Button
+            danger
+            type="link"
+            icon={<DeleteOutlined />}
+            loading={loading}
+            title="Delete mock"
+            disabled={!canPoll}
+            onClick={onDeleteMock}
+          />
           <span className="label">ID:</span>
           <Link to={`/pages/mocks/${mock.state.id}`}>{mock.state.id}</Link>
         </div>
@@ -323,6 +336,7 @@ interface Props {
   addMocks: (mocks: string) => unknown;
   lockMock: (mockID: string) => unknown;
   unlockMock: (mockID: string) => unknown;
+  deleteMock: (mockID: string) => unknown;
   setDisplayNewMock: (display: boolean, defaultValue: string) => unknown;
 }
 
@@ -337,6 +351,7 @@ const MocksComponent = ({
   addMocks,
   lockMock,
   unlockMock,
+  deleteMock,
   setDisplayNewMock,
 }: Props) => {
   const minPageSize = 10;
@@ -408,6 +423,7 @@ const MocksComponent = ({
             loading={loading}
             lockMock={lockMock}
             unlockMock={unlockMock}
+            deleteMock={deleteMock}
           />
         ))}
         {filteredMocks.length > minPageSize && pagination}
@@ -496,6 +512,8 @@ export default connect(
     lockMock: (mockID: string) => dispatch(actions.lockMocks.request([mockID])),
     unlockMock: (mockID: string) =>
       dispatch(actions.unlockMocks.request([mockID])),
+    deleteMock: (mockID: string) =>
+      dispatch(actions.deleteMocks.request([mockID])),
     setDisplayNewMock: (display: boolean, defaultValue: string) =>
       dispatch(actions.openMockEditor([display, defaultValue])),
   })

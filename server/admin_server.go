@@ -45,6 +45,7 @@ func Serve(config config.Config) {
 	mocksGroup.POST("", handler.AddMocks)
 	mocksGroup.POST("/lock", handler.LockMocks)
 	mocksGroup.POST("/unlock", handler.UnlockMocks)
+	mocksGroup.DELETE("/delete", handler.DeleteMocks)
 
 	historyGroup := adminServerEngine.Group("/history")
 	historyGroup.GET("", handler.GetHistory)
