@@ -37,6 +37,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+      - uses: actions/checkout@v4
+
     steps:
       - name: Testing Docker container init
         run: |
