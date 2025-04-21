@@ -40,8 +40,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
       - name: Testing Docker container init
         run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose-plugin
           make docker-test-init
 
       - name: Run tests in Docker container
