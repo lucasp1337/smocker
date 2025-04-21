@@ -157,32 +157,14 @@ ifdef IS_SEMVER
 endif
 	docker buildx build --push --build-arg VERSION=$(VERSION) --build-arg COMMIT=$(COMMIT) --platform linux/arm/v7,linux/arm64/v8,linux/amd64 --tag $(DOCKER_IMAGE):$(DOCKER_TAG) .
 
-.PHONY: docker-local
-docker-local: check-default-ports
-	docker-compose -f docker/local/docker-compose.yml up --build
-
-.PHONY: docker-local-detached
-docker-local-detached: check-default-ports
-	docker-compose -f docker/local/docker-compose.yml up --build -d
-
-.PHONY: docker-test-init
-docker-test-init:
-	docker build -t smocker-test -f docker/ci/tests/Dockerfile .
-
-.PHONY: docker-test-run
-docker-test-run:
-	docker run --rm \
-		-v $(PWD)/coverage:/go/src/smocker/coverage \
-		smocker-test \
-		sh -c "make test && make test-integration"
 
 .PHONY: docker-cloud
 docker-cloud: check-default-ports
-	docker-compose -f docker/cloud/docker-compose.yml build \
+	docker-compose build \
 		--build-arg VERSION=$(VERSION) \
 		--build-arg COMMIT=$(COMMIT)
 	docker tag $(DOCKER_IMAGE):$(DOCKER_TAG) $(DOCKER_IMAGE):latest
 
-.PHONY: docker-cloud-run
+.PHONY: docker-run
 docker-cloud-run: check-default-ports
-	docker-compose -f docker/cloud/docker-compose.yml up -d
+	docker-compose up -d

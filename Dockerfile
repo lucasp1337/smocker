@@ -21,7 +21,6 @@ RUN yarn build
 
 # Final stage
 FROM alpine
-LABEL org.opencontainers.image.source="https://github.com/smocker-dev/smocker"
 WORKDIR /opt
 EXPOSE 8080 8081
 # Copy the built frontend from the frontend build stage
