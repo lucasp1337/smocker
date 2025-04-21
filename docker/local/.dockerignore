@@ -1,0 +1,16 @@
+# Version control and IDE
+.git/
+.vscode/
+.idea/
+.DS_Store
+
+# Build artifacts - we'll generate these inside the container
+.cache/
+build/
+coverage/
+
+# We'll use the container's own node_modules
+node_modules/
+
+# Don't need to include CI tests in local dev
+tests/features/

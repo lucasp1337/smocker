@@ -38,36 +38,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-          cache: yarn
-
-
-      - name: Setup Go environment
-        uses: actions/setup-go@v5
-        with:
-          go-version: stable
-
-      - run: yarn install --frozen-lockfile
-
-      - name: Execute tests
+      - name: Run tests in Docker
         run: |
-          make test
-          make test-integration
-          yarn test
-          make coverage
-
-      - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@master
-        continue-on-error: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          make docker-test
 
   build:
     runs-on: ubuntu-latest

@@ -1,0 +1,26 @@
+# docker/ci/tests/docker-compose.yml
+version: '3.8'
+
+services:
+  smocker-tests:
+    build:
+      context: ../../../
+      dockerfile: docker/ci/tests/Dockerfile
+      args:
+        GO_VERSION: 1.23
+    container_name: smocker-tests
+    volumes:
+      - ../../../server:/go/src/smocker/server
+      - ../../../tests:/go/src/smocker/tests
+      - test-coverage:/go/src/smocker/coverage
+    environment:
+      - RUN_LINT=1
+      - RUN_INTEGRATION=1
+      - SMOCKER_PERSISTENCE_DIRECTORY=/go/src/smocker/sessions
+      - CGO_ENABLED=1
+    # Tests will execute and container will exit
+    command: sh -c "make test && make test-integration SUITE=*.yml"
+
+volumes:
+  test-coverage:
+  # This volume persists test coverage reports

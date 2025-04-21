@@ -156,3 +156,35 @@ ifdef IS_SEMVER
 	docker buildx build --push --build-arg VERSION=$(VERSION) --build-arg COMMIT=$(COMMIT) --platform linux/arm/v7,linux/arm64/v8,linux/amd64 --tag $(DOCKER_IMAGE):latest .
 endif
 	docker buildx build --push --build-arg VERSION=$(VERSION) --build-arg COMMIT=$(COMMIT) --platform linux/arm/v7,linux/arm64/v8,linux/amd64 --tag $(DOCKER_IMAGE):$(DOCKER_TAG) .
+
+.PHONY: docker-local
+docker-local: check-default-ports
+	docker-compose -f docker/local/docker-compose.yml up --build
+
+.PHONY: docker-local-detached
+docker-local-detached: check-default-ports
+	docker-compose -f docker/local/docker-compose.yml up --build -d
+
+.PHONY: docker-test
+docker-test:
+	docker build -t smocker-test -f docker/ci/tests/Dockerfile .
+	docker run --rm smocker-test
+
+.PHONY: docker-cloud
+docker-cloud: check-default-ports
+	docker build \
+		--build-arg VERSION=$(VERSION) \
+		--build-arg COMMIT=$(COMMIT) \
+		-t $(DOCKER_IMAGE):$(DOCKER_TAG) \
+		-f docker/cloud/Dockerfile .
+	docker tag $(DOCKER_IMAGE):$(DOCKER_TAG) $(DOCKER_IMAGE):latest
+
+.PHONY: docker-cloud-run
+docker-cloud-run: check-default-ports
+	docker run -d -p 8080:8080 -p 8081:8081 --name $(APPNAME) $(DOCKER_IMAGE):$(DOCKER_TAG)
+
+.PHONY: docker-clean
+docker-clean:
+	-docker-compose -f docker/local/docker-compose.yml down -v
+	-docker rm -f smocker-test 2>/dev/null || true
+	-docker rmi smocker-test 2>/dev/null || true

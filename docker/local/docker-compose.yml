@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  smocker:
+    build:
+      context: ../../
+      dockerfile: docker/local/Dockerfile
+      args:
+        COMMIT: ${COMMIT:-local}
+        GO_VERSION: 1.23
+    container_name: smocker
+    volumes:
+      - ../../:/go/src/smocker
+      - smocker_sessions:/go/src/smocker/sessions
+      - /go/src/smocker/node_modules
+    ports:
+      - "8080:8080"  # Admin API and UI
+      - "8081:8081"  # Mock server
+    restart: unless-stopped
+    environment:
+      - LEVEL=debug
+      - SMOCKER_CONFIG_LISTEN_PORT=8081
+      - SMOCKER_MOCK_SERVER_LISTEN_PORT=8080
+
+volumes:
+  smocker_sessions:
+  # This volume persists mock sessions between container restarts

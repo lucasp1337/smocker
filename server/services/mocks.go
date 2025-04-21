@@ -87,7 +87,8 @@ func (s *mocks) DeleteMocks(ids []string) types.DeletedMockResponse {
 	deletedMocks := make([]string, 0, len(ids))
 
 	for _, mock := range session.Mocks {
-		if idsToDelete[mock.State.ID] {
+		// Check if mock is in the list of IDs to delete and mock isn't locked.
+		if idsToDelete[mock.State.ID] && !mock.State.Locked {
 			deletedMocks = append(deletedMocks, mock.State.ID)
 		} else {
 			keptMocks = append(keptMocks, mock)

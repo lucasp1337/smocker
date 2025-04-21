@@ -233,6 +233,7 @@ const MockComponent = ({
               onClick={onUnlockMock}
             />
           ) : (
+            <>
             <Button
               type="link"
               icon={<UnlockFilled />}
@@ -241,16 +242,18 @@ const MockComponent = ({
               disabled={!canPoll}
               onClick={onLockMock}
             />
+              <Button
+                danger
+                type="link"
+                icon={<DeleteOutlined />}
+                loading={loading}
+                title="Delete mock"
+                disabled={!canPoll}
+                onClick={onDeleteMock}
+              />
+            </>
           )}
-          <Button
-            danger
-            type="link"
-            icon={<DeleteOutlined />}
-            loading={loading}
-            title="Delete mock"
-            disabled={!canPoll}
-            onClick={onDeleteMock}
-          />
+
           <span className="label">ID:</span>
           <Link to={`/pages/mocks/${mock.state.id}`}>{mock.state.id}</Link>
         </div>
