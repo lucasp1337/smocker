@@ -45,8 +45,6 @@ jobs:
 
       - name: Testing Docker container init
         run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose-plugin
           make docker-test-init
 
       - name: Run tests in Docker container
