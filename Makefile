@@ -167,11 +167,14 @@ docker-local-detached: check-default-ports
 
 .PHONY: docker-test-init
 docker-test-init:
-	docker-compose -f docker/ci/tests/docker-compose.yml build
+	docker build -t smocker-test -f docker/ci/tests/Dockerfile .
 
 .PHONY: docker-test-run
 docker-test-run:
-	docker-compose -f docker/ci/tests/docker-compose.yml up --exit-code-from smocker-tests
+	docker run --rm \
+		-v $(PWD)/coverage:/go/src/smocker/coverage \
+		smocker-test \
+		sh -c "make test && make test-integration"
 
 .PHONY: docker-cloud
 docker-cloud: check-default-ports
