@@ -38,9 +38,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Run tests in Docker
+      - name: Testing Docker container init
         run: |
-          make docker-test
+          make docker-test-init
+
+      - name: Run tests in Docker container
+        run: |
+          make docker-test-run
 
   build:
     runs-on: ubuntu-latest

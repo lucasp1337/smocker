@@ -165,26 +165,21 @@ docker-local: check-default-ports
 docker-local-detached: check-default-ports
 	docker-compose -f docker/local/docker-compose.yml up --build -d
 
-.PHONY: docker-test
-docker-test:
-	docker build -t smocker-test -f docker/ci/tests/Dockerfile .
-	docker run --rm smocker-test
+.PHONY: docker-test-init
+docker-test-init:
+	docker-compose -f docker/ci/tests/docker-compose.yml build
+
+.PHONY: docker-test-run
+docker-test-run:
+	docker-compose -f docker/ci/tests/docker-compose.yml up --exit-code-from smocker-tests
 
 .PHONY: docker-cloud
 docker-cloud: check-default-ports
-	docker build \
+	docker-compose -f docker/cloud/docker-compose.yml build \
 		--build-arg VERSION=$(VERSION) \
-		--build-arg COMMIT=$(COMMIT) \
-		-t $(DOCKER_IMAGE):$(DOCKER_TAG) \
-		-f docker/cloud/Dockerfile .
+		--build-arg COMMIT=$(COMMIT)
 	docker tag $(DOCKER_IMAGE):$(DOCKER_TAG) $(DOCKER_IMAGE):latest
 
 .PHONY: docker-cloud-run
 docker-cloud-run: check-default-ports
-	docker run -d -p 8080:8080 -p 8081:8081 --name $(APPNAME) $(DOCKER_IMAGE):$(DOCKER_TAG)
-
-.PHONY: docker-clean
-docker-clean:
-	-docker-compose -f docker/local/docker-compose.yml down -v
-	-docker rm -f smocker-test 2>/dev/null || true
-	-docker rmi smocker-test 2>/dev/null || true
+	docker-compose -f docker/cloud/docker-compose.yml up -d
