@@ -1,4 +1,4 @@
-module github.com/smocker-dev/smocker
+module github.com/lucasp1337/smocker
 
 go 1.15
 

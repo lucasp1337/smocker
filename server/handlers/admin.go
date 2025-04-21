@@ -5,9 +5,9 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo/v4"
+	"github.com/lucasp1337/smocker/server/services"
+	"github.com/lucasp1337/smocker/server/types"
 	log "github.com/sirupsen/logrus"
-	"github.com/smocker-dev/smocker/server/services"
-	"github.com/smocker-dev/smocker/server/types"
 )
 
 type Admin struct {
@@ -161,6 +161,16 @@ func (a *Admin) VerifySession(c echo.Context) error {
 	}
 
 	return respondAccordingAccept(c, response)
+}
+
+func (a *Admin) DeleteMocks(c echo.Context) error {
+	var ids []string
+	if err := bindAccordingAccept(c, &ids); err != nil {
+		return err
+	}
+
+	mocks := a.mocksServices.DeleteMocks(ids)
+	return c.JSON(http.StatusOK, mocks)
 }
 
 func (a *Admin) GetHistory(c echo.Context) error {

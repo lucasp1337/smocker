@@ -136,6 +136,11 @@ export type Mock = t.TypeOf<typeof MockCodec>;
 export const MocksCodec = t.array(MockCodec);
 export type Mocks = t.TypeOf<typeof MocksCodec>;
 
+export const DeletedMocksResponseCodec = t.type({
+  mocks: MocksCodec,
+  deleted: t.array(t.string)
+});
+
 const GraphEntryCodec = t.type({
   type: t.string,
   message: t.string,

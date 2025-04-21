@@ -1,0 +1,26 @@
+# For CI tests, we only need backend code and test files
+
+.cache/
+.git/
+.vscode/
+.idea/
+.DS_Store
+
+client/
+node_modules/
+package.json
+yarn.lock
+build/client/
+
+# Only include test files needed for CI testing
+# Note: We don't exclude tests/ since we need them for testing
+# But we will only COPY specific test files in the Dockerfile
+
+# Documentation
+README.md
+docs/
+
+# Other Docker files
+docker/local/
+docker/cloud/
+Dockerfile

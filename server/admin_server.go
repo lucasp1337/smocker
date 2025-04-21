@@ -10,10 +10,10 @@ import (
 	"github.com/facebookgo/grace/gracehttp"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/lucasp1337/smocker/server/config"
+	"github.com/lucasp1337/smocker/server/handlers"
+	"github.com/lucasp1337/smocker/server/services"
 	log "github.com/sirupsen/logrus"
-	"github.com/smocker-dev/smocker/server/config"
-	"github.com/smocker-dev/smocker/server/handlers"
-	"github.com/smocker-dev/smocker/server/services"
 )
 
 // TemplateRenderer is a custom html/template renderer for Echo framework
@@ -45,6 +45,7 @@ func Serve(config config.Config) {
 	mocksGroup.POST("", handler.AddMocks)
 	mocksGroup.POST("/lock", handler.LockMocks)
 	mocksGroup.POST("/unlock", handler.UnlockMocks)
+	mocksGroup.DELETE("/delete", handler.DeleteMocks)
 
 	historyGroup := adminServerEngine.Group("/history")
 	historyGroup.GET("", handler.GetHistory)

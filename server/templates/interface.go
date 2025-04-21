@@ -3,7 +3,7 @@ package templates
 import (
 	"fmt"
 
-	"github.com/smocker-dev/smocker/server/types"
+	"github.com/lucasp1337/smocker/server/types"
 )
 
 type TemplateEngine interface {

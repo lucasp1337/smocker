@@ -7,8 +7,8 @@ import (
 	"text/template"
 
 	"github.com/Masterminds/sprig/v3"
+	"github.com/lucasp1337/smocker/server/types"
 	log "github.com/sirupsen/logrus"
-	"github.com/smocker-dev/smocker/server/types"
 	"gopkg.in/yaml.v3"
 )
 

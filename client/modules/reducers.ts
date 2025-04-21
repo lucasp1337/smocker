@@ -225,12 +225,13 @@ const history = combineReducers({
 });
 
 const loadingMocks = (state = false, action: Actions) => {
-  const { fetchMocks, addMocks, lockMocks, unlockMocks, reset } = actions;
+  const { fetchMocks, addMocks, lockMocks, unlockMocks, deleteMocks, reset } = actions;
   switch (action.type) {
     case getType(fetchMocks.request):
     case getType(addMocks.request):
     case getType(lockMocks.request):
     case getType(unlockMocks.request):
+    case getType(deleteMocks.request):
     case getType(reset.request): {
       return true;
     }
@@ -242,6 +243,8 @@ const loadingMocks = (state = false, action: Actions) => {
     case getType(lockMocks.failure):
     case getType(unlockMocks.success):
     case getType(unlockMocks.failure):
+    case getType(deleteMocks.success):
+    case getType(deleteMocks.failure):
     case getType(reset.success):
     case getType(reset.failure): {
       return false;
@@ -252,7 +255,7 @@ const loadingMocks = (state = false, action: Actions) => {
 };
 
 const mockList = (state: Mocks = [], action: Actions) => {
-  const { fetchMocks, lockMocks, unlockMocks, reset } = actions;
+  const { fetchMocks, lockMocks, unlockMocks, deleteMocks, reset } = actions;
   switch (action.type) {
     case getType(reset.success): {
       return [];
@@ -270,6 +273,9 @@ const mockList = (state: Mocks = [], action: Actions) => {
         }
         return mock;
       });
+    }
+    case getType(deleteMocks.success): {
+      return action.payload.mocks;
     }
     default:
       return state;
@@ -290,12 +296,13 @@ const mockEditor = (
 };
 
 const mocksError = (state: SmockerError | null = null, action: Actions) => {
-  const { fetchMocks, addMocks, lockMocks, unlockMocks, reset } = actions;
+  const { fetchMocks, addMocks, lockMocks, unlockMocks, deleteMocks, reset } = actions;
   switch (action.type) {
     case getType(fetchMocks.failure):
     case getType(addMocks.failure):
     case getType(lockMocks.failure):
     case getType(unlockMocks.failure):
+    case getType(deleteMocks.failure):
     case getType(reset.failure): {
       return action.payload;
     }
@@ -303,6 +310,7 @@ const mocksError = (state: SmockerError | null = null, action: Actions) => {
     case getType(addMocks.success):
     case getType(lockMocks.success):
     case getType(unlockMocks.success):
+    case getType(deleteMocks.success):
     case getType(reset.success): {
       return null;
     }

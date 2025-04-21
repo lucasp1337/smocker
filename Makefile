@@ -156,3 +156,15 @@ ifdef IS_SEMVER
 	docker buildx build --push --build-arg VERSION=$(VERSION) --build-arg COMMIT=$(COMMIT) --platform linux/arm/v7,linux/arm64/v8,linux/amd64 --tag $(DOCKER_IMAGE):latest .
 endif
 	docker buildx build --push --build-arg VERSION=$(VERSION) --build-arg COMMIT=$(COMMIT) --platform linux/arm/v7,linux/arm64/v8,linux/amd64 --tag $(DOCKER_IMAGE):$(DOCKER_TAG) .
+
+
+.PHONY: docker-cloud
+docker-cloud: check-default-ports
+	docker-compose build \
+		--build-arg VERSION=$(VERSION) \
+		--build-arg COMMIT=$(COMMIT)
+	docker tag $(DOCKER_IMAGE):$(DOCKER_TAG) $(DOCKER_IMAGE):latest
+
+.PHONY: docker-run
+docker-cloud-run: check-default-ports
+	docker-compose up -d

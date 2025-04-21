@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/smocker-dev/smocker/server/types"
+	"github.com/lucasp1337/smocker/server/types"
 	"github.com/teris-io/shortid"
 )
 
@@ -22,6 +22,7 @@ type Mocks interface {
 	GetMockByID(sessionID, id string) (*types.Mock, error)
 	LockMocks(ids []string) types.Mocks
 	UnlockMocks(ids []string) types.Mocks
+	DeleteMocks(ids []string) types.DeletedMockResponse
 	AddHistoryEntry(sessionID string, entry *types.Entry) (*types.Entry, error)
 	GetHistory(sessionID string) (types.History, error)
 	GetHistoryByPath(sessionID, filterPath string) (types.History, error)
@@ -66,6 +67,41 @@ func (s *mocks) AddMock(sessionID string, newMock *types.Mock) (*types.Mock, err
 	session.Mocks = append(types.Mocks{newMock}, session.Mocks...)
 	go s.persistence.StoreMocks(session.ID, session.Mocks.Clone())
 	return newMock, nil
+}
+
+func (s *mocks) DeleteMocks(ids []string) types.DeletedMockResponse {
+	// Get the last session ID
+	lastSessionID := s.GetLastSession().ID
+
+	session, _ := s.GetSessionByID(lastSessionID)
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	idsToDelete := make(map[string]bool)
+	for _, id := range ids {
+		idsToDelete[id] = true
+	}
+
+	keptMocks := make(types.Mocks, 0, len(session.Mocks))
+	deletedMocks := make([]string, 0, len(ids))
+
+	for _, mock := range session.Mocks {
+		// Check if mock is in the list of IDs to delete and mock isn't locked.
+		if idsToDelete[mock.State.ID] && !mock.State.Locked {
+			deletedMocks = append(deletedMocks, mock.State.ID)
+		} else {
+			keptMocks = append(keptMocks, mock)
+		}
+	}
+
+	session.Mocks = keptMocks
+	go s.persistence.StoreMocks(session.ID, session.Mocks.Clone())
+
+	return types.DeletedMockResponse{
+		Mocks:   session.Mocks.Clone(),
+		Deleted: deletedMocks,
+	}
 }
 
 func (s *mocks) GetMocks(sessionID string) (types.Mocks, error) {

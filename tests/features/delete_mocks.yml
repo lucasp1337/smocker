@@ -1,0 +1,48 @@
+name: Delete mocks from smocker
+version: "2"
+testcases:
+  - name: Init
+    steps:
+      - type: http
+        method: POST
+        url: http://localhost:8081/reset
+      - type: http
+        method: POST
+        url: http://localhost:8081/mocks
+        headers:
+          Content-Type: "application/x-yaml"
+        bodyFile: ../data/basic_mock.yml
+        assertions:
+          - result.statuscode ShouldEqual 200
+          - result.bodyjson.message ShouldEqual "Mocks registered successfully"
+      - type: http
+        method: GET
+        url: http://localhost:8081/mocks
+        assertions:
+          - result.statuscode ShouldEqual 200
+          - result.bodyjson.__len__ ShouldEqual 1
+          - result.bodyjson.bodyjson0.request.method.matcher ShouldEqual ShouldMatch
+          - result.bodyjson.bodyjson0.request.method.value ShouldEqual .*
+        vars:
+          mock_id:
+            from: result.bodyjson.bodyjson0.state.id
+
+  - name: Delete Mock
+    steps:
+      - type: http
+        method: DELETE
+        url: http://localhost:8081/mocks/delete
+        headers:
+          Content-Type: "application/json"
+        body: >
+          ["{{.Init.mock_id}}"]
+        assertions:
+          - result.statuscode ShouldEqual 200
+          - result.bodyjson.deleted.__len__ ShouldEqual 1
+          - result.bodyjson.deleted.deleted0 ShouldEqual {{.Init.mock_id}}
+      - type: http
+        method: GET
+        url: http://localhost:8081/mocks
+        assertions:
+          - result.statuscode ShouldEqual 200
+          - result.bodyjson.__len__ ShouldEqual 0

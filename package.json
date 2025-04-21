@@ -84,11 +84,6 @@
   "alias": {
     "react-dom": "@hot-loader/react-dom"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "*.{ts,tsx,html,scss,json}": "prettier --write"
   },

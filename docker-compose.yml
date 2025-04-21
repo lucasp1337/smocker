@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  smocker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        COMMIT: ${COMMIT:-local}
+        GO_VERSION: 1.23
+    container_name: smocker
+    ports:
+      - "8081:8081"  # Admin API and UI
+      - "8080:8080"  # Mock server
+    restart: unless-stopped
+    environment:
+      - SMOCKER_CONFIG_LISTEN_PORT=8081
+      - SMOCKER_MOCK_SERVER_LISTEN_PORT=8080

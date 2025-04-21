@@ -82,6 +82,12 @@ const unlockMocks = createAsyncAction(
   "@APP/MOCKS/UNLOCK/FAILURE"
 )<string[], Mocks, SmockerError>();
 
+const deleteMocks = createAsyncAction(
+  "@APP/MOCKS/DELETE",
+  "@APP/MOCKS/DELETE/SUCCESS",
+  "@APP/MOCKS/DELETE/FAILURE"
+)<string[], { mocks: Mocks, deleted: string[] }, SmockerError>();
+
 const reset = createAsyncAction(
   "@APP/RESET",
   "@APP/RESET/SUCCESS",
@@ -101,6 +107,7 @@ export const actions = {
   addMocks,
   lockMocks,
   unlockMocks,
+  deleteMocks,
   reset,
 };
 
