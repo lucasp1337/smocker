@@ -5,10 +5,10 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo/v4"
+	"github.com/lucasp1337/smocker/server/config"
+	"github.com/lucasp1337/smocker/server/handlers"
+	"github.com/lucasp1337/smocker/server/services"
 	log "github.com/sirupsen/logrus"
-	"github.com/smocker-dev/smocker/server/config"
-	"github.com/smocker-dev/smocker/server/handlers"
-	"github.com/smocker-dev/smocker/server/services"
 )
 
 func NewMockServer(cfg config.Config) (*http.Server, services.Mocks) {

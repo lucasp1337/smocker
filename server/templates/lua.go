@@ -5,8 +5,8 @@ import (
 	"time"
 
 	goJson "github.com/layeh/gopher-json"
+	"github.com/lucasp1337/smocker/server/types"
 	log "github.com/sirupsen/logrus"
-	"github.com/smocker-dev/smocker/server/types"
 	"github.com/yuin/gluamapper"
 	lua "github.com/yuin/gopher-lua"
 	luar "layeh.com/gopher-luar"

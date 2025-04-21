@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/smocker-dev/smocker/server/types"
+	"github.com/lucasp1337/smocker/server/types"
 	"github.com/teris-io/shortid"
 )
 

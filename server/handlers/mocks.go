@@ -8,10 +8,10 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v4"
+	"github.com/lucasp1337/smocker/server/services"
+	"github.com/lucasp1337/smocker/server/templates"
+	"github.com/lucasp1337/smocker/server/types"
 	log "github.com/sirupsen/logrus"
-	"github.com/smocker-dev/smocker/server/services"
-	"github.com/smocker-dev/smocker/server/templates"
-	"github.com/smocker-dev/smocker/server/types"
 	"gopkg.in/yaml.v3"
 )
 
